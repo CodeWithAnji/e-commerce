@@ -12,7 +12,7 @@ const Model = ({ isModel, setIsModel, children }) => {
         >
           &times;
         </button>
-        <div>{children} hiii</div>
+        <div>{children} </div>
       </div>
     </div>
   );

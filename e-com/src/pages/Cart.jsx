@@ -4,11 +4,21 @@ import Empty from "../assets/images/empty1.jpg";
 import { FaTrashAlt } from "react-icons/fa";
 import Model from "../components/Model";
 import ChangeAdress from "../components/ChangeAdress";
+import { useDispatch } from "react-redux";
+import {
+  decreaseQuantity,
+  increaseQuantity,
+  removeFromCart,
+} from "../redux/cartSlice";
+import { useNavigate } from "react-router-dom";
+useNavigate;
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const [address, setAddress] = useState("main street 509324");
   const [isModel, setIsModel] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -52,23 +62,37 @@ const Cart = () => {
                           </div>
                         </div>
                         <div className="flex space-x-12 items-center">
-                          <p>{product.price}</p>
+                          <p>${product.price}</p>
                           <div className="flex items-center justify-center border">
-                            <button className="text-xl font-bold px-1.5 border-r">
+                            <button
+                              className="text-xl font-bold px-1.5 border-r hover:bg-gray-300"
+                              onClick={() =>
+                                dispatch(decreaseQuantity(product.id))
+                              }
+                            >
                               -
                             </button>
                             <p className="text-md px-1.5 border-r">
                               {product.quantity}
                             </p>
-                            <button className="text-xl font-bold px-1.5 border-r">
+                            <button
+                              className="text-xl font-bold px-1.5 border-r hover:bg-gray-300"
+                              onClick={() =>
+                                dispatch(increaseQuantity(product.id))
+                              }
+                            >
                               +
                             </button>
                           </div>
-                          <p className="text-xl px-2">
-                            {(product.quantity * product.price).toFixed(2)}
+                          <p className="text-md">
+                            ${(product.quantity * product.price).toFixed(2)}
                           </p>
-                          <button className="text-xl px-1 text-red-600 border-1">
-                            <FaTrashAlt />
+                          <button className="text-xl px-1 text-green-600 border-1 hover:text-red-600">
+                            <FaTrashAlt
+                              onClick={() =>
+                                dispatch(removeFromCart(product.id))
+                              }
+                            />
                           </button>
                         </div>
                       </div>
@@ -107,14 +131,19 @@ const Cart = () => {
                   </div>
 
                   {/* Checkout Button */}
-                  <button className="w-full mt-6 bg-red-600 text-white py-3 rounded-lg hover:bg-red-800">
+                  <button
+                    className="w-full mt-6 bg-red-600 text-white py-3 rounded-lg hover:bg-red-800"
+                    onClick={() => navigate("/checkout")}
+                  >
                     Proceed to Checkout
                   </button>
                 </div>
               </div>
               <Model isModel={isModel} setIsModel={setIsModel}>
-                {" "}
-                <ChangeAdress />
+                <ChangeAdress
+                  setAddress={(newAddr) => setAddress(newAddr)}
+                  setIsModel={setIsModel}
+                />
               </Model>
             </div>
           ) : (
